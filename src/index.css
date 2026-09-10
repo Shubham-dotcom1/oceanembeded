@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-abyss: #020712;
+    --accent-cyan: #00f2ff;
+    --accent-teal: #00d2ff;
+    --accent-blue: #3b82f6;
+  }
+
+  body {
+    background-color: var(--bg-abyss);
+    font-family: 'Inter', sans-serif;
+    color: #f1f5f9;
+  }
+}
+
+/* Custom Glassmorphism Panels */
+.glass-panel {
+  background: rgba(4, 13, 33, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 242, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-interactive {
+  background: rgba(4, 13, 33, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 242, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-interactive:hover {
+  border-color: rgba(0, 242, 255, 0.5);
+  box-shadow: 0 0 25px rgba(0, 242, 255, 0.2), inset 0 0 12px rgba(0, 242, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.glass-button {
+  background: rgba(0, 242, 255, 0.1);
+  border: 1px solid rgba(0, 242, 255, 0.3);
+  backdrop-filter: blur(8px);
+  color: #00f2ff;
+  transition: all 0.2s ease;
+}
+
+.glass-button:hover {
+  background: rgba(0, 242, 255, 0.25);
+  border-color: rgba(0, 242, 255, 0.7);
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+  color: #ffffff;
+}
+
+/* Glow Utilities */
+.text-cyan-glow {
+  text-shadow: 0 0 12px rgba(0, 242, 255, 0.6);
+}
+
+.box-cyan-glow {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 242, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 242, 255, 0.6);
+}
+
+/* Scanline Overlay for Scientific Aesthetic */
+.scanline-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 242, 255, 0.025) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
