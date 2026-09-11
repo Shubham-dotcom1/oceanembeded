@@ -50,7 +50,9 @@ def download_glorys_and_wind(out_dir):
         )
         print("GLORYS download complete!")
     except Exception as e:
-        print(f"GLORYS download failed: {e}")
+        import traceback
+        print(f"GLORYS download failed:")
+        traceback.print_exc()
 
     print("\n2. Downloading Blended Wind...")
     wind_file = os.path.join(out_dir, "wind_bob_pilot.nc")
@@ -74,7 +76,9 @@ def download_glorys_and_wind(out_dir):
         )
         print("Wind download complete!")
     except Exception as e:
-        print(f"Wind download failed: {e}")
+        import traceback
+        print(f"Wind download failed:")
+        traceback.print_exc()
 
 if __name__ == "__main__":
     out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'raw_nio'))

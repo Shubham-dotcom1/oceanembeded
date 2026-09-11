@@ -50,7 +50,8 @@ export default function DashboardLayout({ onOpenArgoModal }) {
   React.useEffect(() => {
     if (selectedLocation && selectedLocation.isValid) {
       setIsInferencing(true);
-      fetch(`http://127.0.0.1:8000/api/v1/reconstruct?lat=${selectedLocation.lat}&lon=${selectedLocation.lng}&date=${selectedDate}`)
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      fetch(`${apiUrl}/api/v1/reconstruct?lat=${selectedLocation.lat}&lon=${selectedLocation.lng}&date=${selectedDate}`)
         .then(res => res.json())
         .then(data => {
           setInferenceData(data);
