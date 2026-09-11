@@ -3,40 +3,13 @@ import { Globe, Compass } from 'lucide-react';
 
 export const OCEAN_REGIONS = [
   {
-    id: 'gulf_stream',
-    name: 'Gulf Stream Thermal Front',
-    coords: '24.5° N, 68.2° W',
-    ocean: 'North Atlantic',
-    sst: '26.4°C',
-    thermoclineDepth: '180m',
-    description: 'Dynamic boundary current with intense mesoscale eddies and sharp subsurface thermal gradients.'
-  },
-  {
-    id: 'equatorial_pacific',
-    name: 'Equatorial Pacific (El Niño Zone)',
-    coords: '0.5° S, 140.2° W',
-    ocean: 'Tropical Pacific',
-    sst: '29.1°C',
-    thermoclineDepth: '90m',
-    description: 'Strong thermocline slope displacement driven by trade wind relaxation during ENSO warming cycles.'
-  },
-  {
-    id: 'sargasso_trench',
-    name: 'Sargasso Deep Basin',
-    coords: '26.1° N, 64.5° W',
-    ocean: 'Central Atlantic',
-    sst: '24.8°C',
-    thermoclineDepth: '220m',
-    description: 'Highly stratified subtropical gyre system used as global ARGO profiler calibration baseline.'
-  },
-  {
-    id: 'southern_ocean',
-    name: 'Southern Ocean Antarctic Front',
-    coords: '55.4° S, 42.1° W',
-    ocean: 'Antarctic Circumpolar',
-    sst: '4.2°C',
-    thermoclineDepth: '40m',
-    description: 'Dense Antarctic Bottom Water (AABW) formation site with intense vertical mixing.'
+    id: 'north_indian_ocean',
+    name: 'North Indian Ocean (Arabian Sea & Bay of Bengal)',
+    coords: '15.0° N, 70.0° E',
+    ocean: 'Indian Ocean',
+    sst: '28.5°C',
+    thermoclineDepth: '60m',
+    description: 'Dynamic monsoon-driven region where our PINN 3D model is extensively trained.'
   }
 ];
 

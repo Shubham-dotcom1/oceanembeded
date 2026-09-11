@@ -1,4 +1,61 @@
-# Root gitignore
-node_modules/
-dist/
+# ==========================================
+# Frontend (React/Vite)
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ==========================================
+# Backend (Python/FastAPI/PyTorch)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/.venv/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables
+.env
+.env.secret
+backend/.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# PyTorch Checkpoints & Large Models
+*.pth
+*.pt
+*.ckpt
+backend/model/checkpoints/*
+!backend/model/checkpoints/.gitkeep
+
+# Large Datasets & NetCDF Files
+*.nc
+*.csv
+*.h5
+*.hdf5
+backend/data/raw_nio/*
+!backend/data/raw_nio/.gitkeep
+backend/data/processed_nio/*
+!backend/data/processed_nio/.gitkeep
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

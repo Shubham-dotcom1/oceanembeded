@@ -6,11 +6,9 @@ import PlanetBannerSection from './components/ui/PlanetBannerSection';
 import PlanetTestimonialsSection from './components/ui/PlanetTestimonialsSection';
 import PlanetCTASection from './components/ui/PlanetCTASection';
 import DashboardLayout from './components/ui/DashboardLayout';
-import ARGOValidationModal from './components/ui/ARGOValidationModal';
 
 export default function App() {
   const [activeMode, setActiveMode] = useState('landing'); // 'landing' | 'dashboard'
-  const [isArgoModalOpen, setIsArgoModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full bg-[#080c14] text-slate-100 font-sans select-none relative overflow-x-hidden">
@@ -52,17 +50,9 @@ export default function App() {
       ) : (
         /* Scientific Map Observatory Dashboard View */
         <div className="pt-20">
-          <DashboardLayout 
-            onOpenArgoModal={() => setIsArgoModalOpen(true)}
-          />
+          <DashboardLayout />
         </div>
       )}
-
-      {/* ARGO Float Validation Modal */}
-      <ARGOValidationModal 
-        isOpen={isArgoModalOpen}
-        onClose={() => setIsArgoModalOpen(false)}
-      />
     </div>
   );
 }

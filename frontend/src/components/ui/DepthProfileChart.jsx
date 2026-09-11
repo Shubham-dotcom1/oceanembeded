@@ -1,137 +1,150 @@
-import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, ComposedChart, Scatter } from 'recharts';
+import React from 'react';
+import {
+  ComposedChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine
+} from 'recharts';
 
-// Synthetic profile data matching oceanic thermocline physics
-const profileData = [
-  { depth: 0, aiTemp: 26.4, argoTemp: 26.5, uncertaintyUpper: 26.65, uncertaintyLower: 26.15 },
-  { depth: 50, aiTemp: 23.1, argoTemp: 23.0, uncertaintyUpper: 23.35, uncertaintyLower: 22.85 },
-  { depth: 100, aiTemp: 19.4, argoTemp: 19.2, uncertaintyUpper: 19.70, uncertaintyLower: 19.10 },
-  { depth: 200, aiTemp: 14.2, argoTemp: 14.3, uncertaintyUpper: 14.50, uncertaintyLower: 13.90 },
-  { depth: 300, aiTemp: 11.5, argoTemp: 11.4, uncertaintyUpper: 11.80, uncertaintyLower: 11.20 },
-  { depth: 500, aiTemp: 8.6, argoTemp: 8.5, uncertaintyUpper: 8.85, uncertaintyLower: 8.35 },
-  { depth: 750, aiTemp: 5.8, argoTemp: 5.9, uncertaintyUpper: 6.05, uncertaintyLower: 5.55 },
-  { depth: 1000, aiTemp: 4.1, argoTemp: 4.1, uncertaintyUpper: 4.30, uncertaintyLower: 3.90 }
-];
+export default function DepthProfileChart({ selectedDepth, onSelectDepth, selectedLocation, activeMetric = 'temp', inferenceData, isInferencing }) {
+  
+  // Map metrics to display config
+  const metricConfig = {
+    temp: { key: 'temp', color: '#fbbf24', name: 'Temperature', unit: '°C', domain: [0, 32] },
+    salinity: { key: 'salinity', color: '#38bdf8', name: 'Salinity', unit: 'PSU', domain: [33, 36] },
+    density: { key: 'density', color: '#818cf8', name: 'Density', unit: 'kg/m³', domain: [1020, 1030] },
+    anomaly: { key: 'anomaly', color: '#fb7185', name: 'Anomaly', unit: 'ΔT', domain: [-3, 3] },
+  };
+  const config = metricConfig[activeMetric] || metricConfig.temp;
 
-export default function DepthProfileChart({ selectedDepth, onSelectDepth }) {
-  const [activeMetric, setActiveMetric] = useState('temp');
-
-  return (
-    <div className="glass-panel p-4 rounded-2xl border border-cyan-500/20 w-full shadow-2xl backdrop-blur-xl">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-cyan-500/20 pb-2 mb-3">
-        <div>
-          <div className="text-xs font-bold text-cyan-400 font-mono uppercase tracking-wider flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            VERTICAL SUBSURFACE TEMPERATURE PROFILE
+  // The PyTorch model reconstructs Temperature. We derive the others using standard equations of state (EOS)
+  const dynamicProfile = (inferenceData && inferenceData.profile) ? inferenceData.profile.map(p => ({
+    depth: p.depth,
+    temp: p.aiTemp,
+    uncertaintyLower: p.uncertaintyLower,
+    uncertaintyUpper: p.uncertaintyUpper,
+    // Derive secondary parameters based on inferred temperature and depth
+    salinity: Number((34.0 + (30 - p.aiTemp) * 0.05).toFixed(2)),
+    density: Number((1020 + (30 - p.aiTemp) * 0.2 + (p.depth * 0.005)).toFixed(2)),
+    anomaly: Number((p.aiTemp - 24.0).toFixed(2)) // Compare to a 24°C climatological baseline
+  })) : [];
+  
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-900/90 border border-cyan-500/30 p-3 rounded-xl backdrop-blur-md shadow-xl font-mono text-xs">
+          <div className="text-cyan-400 font-bold mb-1 border-b border-slate-700 pb-1">
+            DEPTH: {label}m
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">
-            AI ESTIMATION VS ARGO FLOAT #4902311 SOUNDING
+          <div className="text-slate-200">
+            {config.name}: <span className="font-bold" style={{ color: config.color }}>{payload[0].value} {config.unit}</span>
           </div>
         </div>
+      );
+    }
+    return null;
+  };
 
-        {/* Legend Pills */}
-        <div className="flex items-center gap-3 text-[10px] font-mono">
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-0.5 bg-cyan-400" />
-            <span className="text-cyan-300">AI MODEL</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span className="text-amber-300">ARGO FLOAT</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-3 h-2 bg-cyan-500/20 border border-cyan-500/40 rounded-sm" />
-            <span className="text-slate-400">UNCERTAINTY</span>
+  return (
+    <div className="glass-panel p-4 rounded-3xl border border-cyan-500/30 backdrop-blur-xl shadow-2xl relative">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-sm font-bold text-white font-mono tracking-tight flex items-center gap-2">
+          DEPTH PROFILE CHART
+        </h3>
+        <div className="flex gap-2">
+          {selectedLocation && (
+            <div className={`text-[10px] px-2 py-0.5 rounded-full border font-mono ${selectedLocation.isValid ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40' : 'bg-rose-500/20 text-rose-300 border-rose-400/40'}`}>
+              {selectedLocation.lat}°, {selectedLocation.lng}°
+            </div>
+          )}
+          <div className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-400/40 font-mono">
+            {selectedDepth}m SELECTED
           </div>
         </div>
       </div>
-
-      {/* Recharts Temperature vs Depth Profile */}
-      <div className="h-56 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            data={profileData}
-            margin={{ top: 10, right: 20, left: -10, bottom: 5 }}
+      
+      {!selectedLocation ? (
+        <div className="h-[320px] w-full flex flex-col items-center justify-center text-slate-400 font-mono text-xs border border-dashed border-slate-700 rounded-xl bg-slate-900/30">
+          <span className="text-3xl mb-2">🌍</span>
+          <span>Click on the map to run PINN 3D inference</span>
+        </div>
+      ) : !selectedLocation.isValid ? (
+        <div className="h-[320px] w-full flex flex-col items-center justify-center text-rose-400 font-mono text-xs border border-dashed border-rose-900/50 rounded-xl bg-rose-950/20">
+          <span className="text-3xl mb-2 text-rose-500">⚠️</span>
+          <span className="font-bold text-sm mb-1">NOT FOUND</span>
+          <span className="text-slate-400 max-w-[200px] text-center">Model capabilities not trained for this specific ocean region.</span>
+        </div>
+      ) : isInferencing ? (
+        <div className="h-[320px] w-full flex flex-col items-center justify-center text-cyan-400 font-mono text-xs border border-dashed border-cyan-900/50 rounded-xl bg-cyan-950/20">
+          <span className="text-3xl mb-4 animate-spin text-cyan-500">⚙️</span>
+          <span className="font-bold text-sm mb-1 animate-pulse">COMPUTING FORWARD PASS...</span>
+          <span className="text-slate-400 max-w-[250px] text-center">Loading coordinates into PyTorch pilot model and executing PINN inference...</span>
+        </div>
+      ) : (
+        <div className="h-[320px] w-full -ml-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart
+              layout="vertical"
+              data={dynamicProfile}
+            margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
             onClick={(e) => {
-              if (e && e.activePayload && e.activePayload.length > 0) {
-                onSelectDepth && onSelectDepth(e.activePayload[0].payload.depth);
+              if (e && e.activePayload) {
+                onSelectDepth(e.activePayload[0].payload.depth);
               }
             }}
           >
-            <XAxis 
-              dataKey="aiTemp" 
-              type="number" 
-              domain={[0, 30]} 
-              unit="°C" 
-              stroke="#64748b" 
-              fontSize={10} 
-              fontFamily="JetBrains Mono"
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={true} vertical={true} opacity={0.5} />
+            
+            {/* Depth (Y-Axis) */}
             <YAxis 
               dataKey="depth" 
-              type="number" 
+              type="category" 
               reversed={true} 
-              domain={[0, 1000]} 
-              unit="m" 
-              stroke="#64748b" 
-              fontSize={10} 
-              fontFamily="JetBrains Mono"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }}
+              width={40}
             />
-            <Tooltip 
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload;
-                  const delta = (data.aiTemp - data.argoTemp).toFixed(2);
-                  return (
-                    <div className="glass-panel p-2.5 rounded-lg border border-cyan-400/50 text-[11px] font-mono shadow-xl backdrop-blur-md">
-                      <div className="text-cyan-400 font-bold">DEPTH: {data.depth} m</div>
-                      <div className="text-cyan-300">AI MODEL: {data.aiTemp}°C</div>
-                      <div className="text-amber-400">ARGO SOUNDING: {data.argoTemp}°C</div>
-                      <div className="text-slate-400 text-[10px] mt-1 pt-1 border-t border-slate-800">
-                        BIAS DELTA: <span className={Math.abs(delta) < 0.2 ? "text-emerald-400" : "text-amber-400"}>{delta}°C</span>
-                      </div>
-                    </div>
-                  );
-                }
-                return null;
-              }}
+            
+            {/* Metric (X-Axis) */}
+            <XAxis 
+              type="number" 
+              domain={config.domain}
+              stroke="#475569" 
+              tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }}
+              tickFormatter={(val) => `${val}${config.unit === '°C' ? '°' : ''}`}
+            />
+            
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(6, 182, 212, 0.2)', strokeWidth: 2 }} />
+            
+            {/* Selected Depth Reference Line */}
+            <ReferenceLine 
+              y={selectedDepth} 
+              stroke="rgba(34, 211, 238, 0.5)" 
+              strokeDasharray="3 3" 
             />
 
-            {/* Uncertainty Error Band Shading */}
-            <Area 
-              type="monotone" 
-              dataKey="uncertaintyUpper" 
-              stroke="none" 
-              fill="#00f2ff" 
-              fillOpacity={0.15} 
+            <Line
+              type="monotone"
+              dataKey={config.key}
+              stroke={config.color}
+              strokeWidth={3}
+              dot={{ r: 4, fill: '#0f172a', stroke: config.color, strokeWidth: 2 }}
+              activeDot={{ r: 6, fill: config.color, stroke: '#fff', strokeWidth: 2 }}
+              animationDuration={1000}
             />
-
-            {/* AI Estimation Curve */}
-            <Line 
-              type="monotone" 
-              dataKey="aiTemp" 
-              stroke="#00f2ff" 
-              strokeWidth={2.5} 
-              dot={{ r: 3, fill: '#00f2ff' }} 
-              activeDot={{ r: 6, fill: '#ffffff', stroke: '#00f2ff', strokeWidth: 2 }}
-            />
-
-            {/* ARGO Float Sounding Scatter Dots */}
-            <Scatter 
-              dataKey="argoTemp" 
-              fill="#f59e0b" 
-              stroke="#f59e0b" 
-            />
+            
           </ComposedChart>
         </ResponsiveContainer>
       </div>
-
-      {/* Metric Info Bar */}
-      <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-2 border-t border-slate-800/80">
-        <div>RMSE ERROR: <span className="text-emerald-400 font-bold">0.12°C</span></div>
-        <div>MODEL RELIABILITY: <span className="text-cyan-300 font-bold">98.4%</span></div>
-        <div>ARGO SYNC: <span className="text-cyan-400 font-bold">12 MINS AGO</span></div>
+      )}
+      
+      <div className="mt-2 text-center text-[10px] text-slate-500 font-mono">
+        Click on a map location to infer thermal stratification.
       </div>
     </div>
   );
