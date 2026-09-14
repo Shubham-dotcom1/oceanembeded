@@ -23,14 +23,15 @@ class SpatialEmbeddingEncoder(nn.Module):
             
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.AdaptiveAvgPool2d((1, 1)) # (B, 64, 1, 1) - Global Average Pooling
+            nn.ReLU()
+            # Removed AdaptiveAvgPool2d to preserve mesoscale spatial features!
         )
-        self.fc = nn.Linear(64, hidden_dim)
+        # Flattened spatial map: 64 channels * 6 * 6 = 2304
+        self.fc = nn.Linear(2304, hidden_dim)
 
     def forward(self, x):
         features = self.conv_block(x)
-        features = features.view(features.size(0), -1) # Flatten to (B, 64)
+        features = features.view(features.size(0), -1) # Flatten spatial topology
         return self.fc(features)
 
 class TemporalFeatureEncoder(nn.Module):

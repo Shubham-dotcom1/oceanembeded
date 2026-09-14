@@ -41,6 +41,11 @@ backend/.env
 backend/model/checkpoints/*
 !backend/model/checkpoints/.gitkeep
 !backend/model/checkpoints/pilot_model.pth
+!backend/model/checkpoints/nautilus_v2_best.pth
+
+# IDE and Editor Files
+.vscode/
+.idea/
 
 # Large Datasets & NetCDF Files
 *.nc
@@ -60,3 +65,23 @@ backend/data/processed_nio/*
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# ==========================================
+# NAUTILUS V2 - Large Data Exclusions
+# ==========================================
+# Exclude Zarr Datasets completely
+*.zarr
+*.zarr/
+backend/data/processed_nio.zarr/
+backend/data/processed_nio.zarr/*
+
+# Logs
+backend/logs/*
+!backend/logs/.gitkeep
+*.log
+
+# Scratch scripts
+backend/scratch/*
+!backend/scratch/.gitkeep
+backend/scripts/r2_out.txt
+backend/reports/r2_score.txt

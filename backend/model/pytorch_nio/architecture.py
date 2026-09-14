@@ -9,7 +9,7 @@ class OceanEmbeddedNIO(nn.Module):
     Master PyTorch Architecture for SIH 2026.
     North Indian Ocean Satellite Embedding & Subsurface Temperature Reconstruction.
     """
-    def __init__(self, in_channels=7, spatial_dim=64, aux_dim=10, temporal_context=1, num_depths=15):
+    def __init__(self, in_channels=7, spatial_dim=64, temporal_context=1, num_depths=15):
         super().__init__()
         
         # 1. Spatial Embedding Encoder
@@ -27,14 +27,12 @@ class OceanEmbeddedNIO(nn.Module):
         # 3. Fusion & Reconstruction Decoder (Dual Heads)
         self.decoder = Decoder(
             feature_dim=spatial_dim, 
-            aux_dim=aux_dim, 
             num_depths=num_depths
         )
         
-    def forward(self, spatial_inputs, aux_inputs):
+    def forward(self, spatial_inputs):
         """
         spatial_inputs: (B, T, C, H, W)
-        aux_inputs: (B, Aux_Dim)
         """
         B, T, C, H, W = spatial_inputs.shape
         
@@ -54,6 +52,6 @@ class OceanEmbeddedNIO(nn.Module):
         temporal_features = self.temporal_encoder(spatial_features)
         
         # Decode to 15 depths (Temperature Mean and Log-Variance)
-        temp_pred, log_var_pred = self.decoder(temporal_features, aux_inputs)
+        temp_pred, log_var_pred = self.decoder(temporal_features)
         
         return temp_pred, log_var_pred
