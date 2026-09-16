@@ -55,7 +55,8 @@ export default function DashboardLayout({ onOpenArgoModal }) {
       // because requests go into a Queue (WebSockets) and standard HTTP POST will fail.
       const runInference = async () => {
         try {
-          const client = await Client.connect("Shubham1029/nautilius-backend");
+          const apiUrl = import.meta.env.VITE_API_URL || "Shubham1029/ocean-api";
+          const client = await Client.connect(apiUrl);
           const result = await client.predict("/reconstruct", [
             parseFloat(selectedLocation.lat),
             parseFloat(selectedLocation.lng),
@@ -65,6 +66,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
           setIsInferencing(false);
         } catch (err) {
           console.error("Inference Error:", err);
+          alert("Gradio Client Error: " + (err.message || JSON.stringify(err)));
           setIsInferencing(false);
         }
       };
