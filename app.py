@@ -1,20 +1,32 @@
 import gradio as gr
+import spaces
 import sys
 import os
 
 # Add backend to path so imports work
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
 
-from backend.api.main import app as fastapi_app
+from backend.api.main import reconstruct_profile
 
-# Create a minimal dummy Gradio interface to satisfy HF Spaces
-def welcome_message():
-    return "Ocean Embedded API is actively running! The live PyTorch inference engine is hosted here. Please connect your Vercel frontend to this URL."
+# ZeroGPU strictly requires the Gradio function to be decorated
+@spaces.GPU
+def predict(lat, lon, date):
+    # Call the exact same PyTorch function from main.py
+    return reconstruct_profile(lat, lon, date)
 
-with gr.Blocks(theme=gr.themes.Monochrome()) as demo:
-    gr.Markdown("# Ocean Embedded NAUTILUS V2 API")
-    gr.Markdown(welcome_message())
+# Create a clean Gradio API interface
+demo = gr.Interface(
+    fn=predict,
+    inputs=[
+        gr.Number(label="lat"), 
+        gr.Number(label="lon"), 
+        gr.Textbox(label="date")
+    ],
+    outputs=gr.JSON(label="output"),
+    title="Ocean Embedded API",
+    description="Live PyTorch ZeroGPU Inference Engine",
+    api_name="reconstruct"
+)
 
-# This is the magic trick: We mount our actual FastAPI app into the Gradio space!
-# HF Spaces will run this file, and our API will be available at the root URL.
-app = gr.mount_gradio_app(fastapi_app, demo, path="/")
+# Launch it! ZeroGPU will automatically manage this.
+demo.launch()

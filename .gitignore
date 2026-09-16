@@ -89,3 +89,7 @@ backend/scratch/*
 !backend/scratch/.gitkeep
 backend/scripts/r2_out.txt
 backend/reports/r2_score.txt
+
+# Test Scripts
+test_hf.js
+test_gradio.py

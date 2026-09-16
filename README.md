@@ -90,6 +90,22 @@ npm run dev
 
 ---
 
+## 🌍 Hosting & Deployment
+
+The application is built to run entirely in the cloud, leveraging free, high-performance tiers.
+
+### Backend (Hugging Face ZeroGPU)
+The PyTorch model is hosted as a **Gradio SDK Space** on Hugging Face.
+- **Hardware**: Free A100 GPU (ZeroGPU architecture).
+- **Integration**: The standard FastAPI app was wrapped into a pure Gradio API to natively comply with ZeroGPU's websocket queue requirements. The backend dynamically downloads the 1.9GB GLORYS dataset on startup.
+
+### Frontend (Vercel)
+The React/Vite dashboard is deployed on **Vercel**.
+- **Connection**: It uses the official `@gradio/client` to establish a secure WebSocket connection to the Hugging Face ZeroGPU queue, allowing the frontend to send coordinates and instantly stream back the 1,000m depth profile.
+- **Environment**: Ensure the `VITE_API_URL` environment variable is set to your Hugging Face Space URL in Vercel settings.
+
+---
+
 ## 📁 Repository Structure
 
 ```text

@@ -7,6 +7,7 @@ import TimeSlider from './TimeSlider';
 import GridCellVisualizer from './GridCellVisualizer';
 import ARGOValidationModal from './ARGOValidationModal';
 import { Layers, ShieldCheck, Thermometer, Radio, Cpu, Navigation, Activity, Droplets, Gauge, AlertCircle, Waves, ArrowDownToLine, Maximize2, Search, Box } from 'lucide-react';
+import { Client } from "@gradio/client";
 
 export default function DashboardLayout({ onOpenArgoModal }) {
   const [selectedDepth, setSelectedDepth] = useState(0);
@@ -27,20 +28,20 @@ export default function DashboardLayout({ onOpenArgoModal }) {
     const dateMatch = searchInput.match(/\b(20\d{2}-\d{2}-\d{2})\b/);
 
     if (!coordMatch) return alert("Please enter coordinates in format: Lat, Lng (e.g. 15.0, 70.0)");
-    
+
     const lat = parseFloat(coordMatch[1]);
     const lng = parseFloat(coordMatch[2]);
-    
+
     let isValid = lng >= 50 && lng <= 95 && lat >= 0 && lat <= 25;
-    
+
     if (isValid) {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`);
         const data = await res.json();
         if (data && data.elevation && data.elevation[0] > 5) isValid = false;
-      } catch (err) {}
+      } catch (err) { }
     }
-    
+
     setSelectedLocation({ lat: lat.toFixed(2), lng: lng.toFixed(2), isValid });
     if (dateMatch) {
       setSelectedDate(dateMatch[1]);
@@ -50,17 +51,24 @@ export default function DashboardLayout({ onOpenArgoModal }) {
   React.useEffect(() => {
     if (selectedLocation && selectedLocation.isValid) {
       setIsInferencing(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-      fetch(`${apiUrl}/api/v1/reconstruct?lat=${selectedLocation.lat}&lon=${selectedLocation.lng}&date=${selectedDate}`)
-        .then(res => res.json())
-        .then(data => {
-          setInferenceData(data);
+      // Hugging Face ZeroGPU requires us to use the official Gradio Client 
+      // because requests go into a Queue (WebSockets) and standard HTTP POST will fail.
+      const runInference = async () => {
+        try {
+          const client = await Client.connect("Shubham1029/nautilius-backend");
+          const result = await client.predict("/reconstruct", [
+            parseFloat(selectedLocation.lat),
+            parseFloat(selectedLocation.lng),
+            selectedDate
+          ]);
+          setInferenceData(result.data[0]);
           setIsInferencing(false);
-        })
-        .catch(err => {
+        } catch (err) {
           console.error("Inference Error:", err);
           setIsInferencing(false);
-        });
+        }
+      };
+      runInference();
     } else {
       setInferenceData(null);
     }
@@ -91,8 +99,8 @@ export default function DashboardLayout({ onOpenArgoModal }) {
         <div className="flex items-center gap-1 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 font-mono text-xs shadow-inner">
           <form onSubmit={handleSearch} className="flex items-center">
             <Search className="w-4 h-4 text-cyan-400 ml-2" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search Lat, Lng, Date (e.g. 15.0, 70.0 2020-05-15)"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -104,7 +112,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
       </div>
 
       {/* Interactive Ocean Region Switcher */}
-      <RegionSelector 
+      <RegionSelector
         currentRegion={currentRegion}
         onSelectRegion={setCurrentRegion}
       />
@@ -116,7 +124,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2 flex flex-col gap-4">
           <div className="h-[520px] relative w-full">
-            <MapLibreOceanMap 
+            <MapLibreOceanMap
               selectedDepth={selectedDepth}
               setSelectedDepth={setSelectedDepth}
               onOpenArgoModal={() => setIsArgoModalOpen(true)}
@@ -124,7 +132,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
               selectedLocation={selectedLocation}
             />
           </div>
-          <TimeSlider 
+          <TimeSlider
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
             isInferencing={isInferencing}
@@ -135,7 +143,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
         <div className="flex flex-col gap-6">
           {/* Action Trigger for 3D Grid Cell */}
           {inferenceData && (
-            <button 
+            <button
               onClick={() => setIsGridCellOpen(true)}
               className="w-full glass-panel p-4 rounded-2xl border-2 border-cyan-400 hover:bg-cyan-500/20 transition-all flex items-center justify-between group shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)]"
             >
@@ -152,7 +160,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
 
           {/* Vertical Depth Profile Graph */}
           <div className="flex-1 glass-panel rounded-3xl p-5 border border-cyan-500/30 shadow-2xl relative overflow-hidden flex flex-col">
-            <DepthProfileChart 
+            <DepthProfileChart
               selectedDepth={selectedDepth}
               onSelectDepth={setSelectedDepth}
               selectedLocation={selectedLocation}
@@ -174,8 +182,8 @@ export default function DashboardLayout({ onOpenArgoModal }) {
             </div>
 
             <p className="text-slate-300 text-[11px] mb-3 leading-relaxed font-sans">
-              {selectedLocation?.isValid 
-                ? `Running inference for coordinates [${selectedLocation.lat}°, ${selectedLocation.lng}°] against North Indian Ocean weights.` 
+              {selectedLocation?.isValid
+                ? `Running inference for coordinates [${selectedLocation.lat}°, ${selectedLocation.lng}°] against North Indian Ocean weights.`
                 : 'Awaiting valid map coordinate selection to compute scientific confidence intervals.'}
             </p>
 
@@ -247,7 +255,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
 
       {/* Full Screen 3D Grid Cell Overlay */}
       {isGridCellOpen && (
-        <GridCellVisualizer 
+        <GridCellVisualizer
           onClose={() => setIsGridCellOpen(false)}
           inferenceData={inferenceData}
           selectedLocation={selectedLocation}
@@ -256,7 +264,7 @@ export default function DashboardLayout({ onOpenArgoModal }) {
       )}
 
       {/* ARGO Float Validation Modal */}
-      <ARGOValidationModal 
+      <ARGOValidationModal
         isOpen={isArgoModalOpen}
         onClose={() => setIsArgoModalOpen(false)}
         inferenceData={inferenceData}

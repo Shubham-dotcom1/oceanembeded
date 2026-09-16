@@ -40,13 +40,34 @@ else:
 model.eval()
 
 # Load GLORYS data for real-time extraction
-glorys_path = os.path.join(os.path.dirname(__file__), '../data/raw_nio/glorys_bob_pilot.nc')
-if os.path.exists(glorys_path):
-    glorys_data = xr.open_dataset(glorys_path)
-    print("GLORYS satellite data loaded for real-time inference.")
-else:
+DATA_DIR = os.path.join(os.path.dirname(__file__), '../data/raw_nio')
+os.makedirs(DATA_DIR, exist_ok=True)
+try:
+    glorys_path = os.path.join(DATA_DIR, "glorys_bob_pilot.nc")
+    
+    # Download from Hugging Face Datasets if running on Cloud and file is missing
+    if not os.path.exists(glorys_path):
+        print("Downloading dataset from Hugging Face Datasets...")
+        try:
+            from huggingface_hub import hf_hub_download
+            hf_hub_download(
+                repo_id="Shubham1029/ocean-data", 
+                filename="glorys_bob_pilot.nc", 
+                repo_type="dataset", 
+                local_dir=DATA_DIR
+            )
+        except Exception as e:
+            print(f"Failed to download: {e}")
+            
+    if os.path.exists(glorys_path):
+        glorys_data = xr.open_dataset(glorys_path)
+        print("GLORYS satellite data loaded for real-time inference.")
+    else:
+        glorys_data = None
+        print("WARNING: GLORYS data not found.")
+except Exception as e:
     glorys_data = None
-    print("WARNING: GLORYS data not found.")
+    print(f"WARNING: GLORYS data not found: {e}")
 
 @app.get("/")
 def health_check():
