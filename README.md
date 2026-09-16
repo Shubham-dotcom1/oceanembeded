@@ -5,6 +5,8 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg?logo=pytorch)](https://pytorch.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
 
+🚀 **Live Deployment:** [https://nautilus-jade-delta.vercel.app/](https://nautilus-jade-delta.vercel.app/)
+
 **Ocean Embedded** is a full-stack, enterprise-grade scientific oceanography platform. It bridges top-millimeter satellite remote sensing (SST, SSS, SLA, Winds, Currents) with a custom **Physics-Informed Neural Network (PINN)** to reconstruct and predict ocean temperature, salinity, and density fields from the surface down to **1,000 meters depth** in real time.
 
 It features a cutting-edge 4D Spatiotemporal architecture, allowing researchers to slide through time and immediately visualize deep-ocean thermodynamics.
