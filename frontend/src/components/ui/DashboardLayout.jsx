@@ -56,7 +56,9 @@ export default function DashboardLayout({ onOpenArgoModal }) {
       const runInference = async () => {
         try {
           const apiUrl = import.meta.env.VITE_API_URL || "Shubham1029/ocean-api";
-          const client = await Client.connect(apiUrl);
+          const hfToken = import.meta.env.VITE_HF_TOKEN || undefined;
+          
+          const client = await Client.connect(apiUrl, { hf_token: hfToken });
           const result = await client.predict("/reconstruct", [
             parseFloat(selectedLocation.lat),
             parseFloat(selectedLocation.lng),
