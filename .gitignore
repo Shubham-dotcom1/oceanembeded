@@ -49,6 +49,7 @@ backend/model/checkpoints/*
 
 # Large Datasets & NetCDF Files
 *.nc
+*.nc.*
 *.csv
 *.h5
 *.hdf5
@@ -72,8 +73,11 @@ Thumbs.db
 # Exclude Zarr Datasets completely
 *.zarr
 *.zarr/
+backend/data/**/*.zarr
 backend/data/processed_nio.zarr/
 backend/data/processed_nio.zarr/*
+backend/data/v3_nio.zarr/
+backend/data/v3_nio.zarr/*
 
 # Logs
 backend/logs/*

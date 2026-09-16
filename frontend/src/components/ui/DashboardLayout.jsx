@@ -217,27 +217,27 @@ export default function DashboardLayout({ onOpenArgoModal }) {
               <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
                 <div className="text-slate-400">SSS (Surface Salinity)</div>
                 <div className="text-sm font-bold text-cyan-300 mt-1">
-                  {isInferencing ? '...' : inferenceData ? (34.2 + (parseFloat(selectedLocation.lat) % 0.8)).toFixed(2) : '--'} <span className="text-[9px] font-normal text-slate-500">PSU</span>
+                  {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.sss.toFixed(2) : '--'} <span className="text-[9px] font-normal text-slate-500">PSU</span>
                 </div>
               </div>
               <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
                 <div className="text-slate-400">SSH (Sea Surface Height)</div>
                 <div className="text-sm font-bold text-indigo-300 mt-1">
-                  {isInferencing ? '...' : inferenceData ? (0.45 + (parseFloat(selectedLocation.lng) % 0.3)).toFixed(2) : '--'} <span className="text-[9px] font-normal text-slate-500">m</span>
+                  {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.ssh.toFixed(2) : '--'} <span className="text-[9px] font-normal text-slate-500">m</span>
                 </div>
               </div>
               <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
                 <div className="text-slate-400">U / V CURRENTS</div>
                 <div className="text-sm font-bold text-emerald-300 mt-1 flex gap-2">
-                  <span>U: {isInferencing ? '...' : inferenceData ? (0.12 + (parseFloat(selectedLocation.lat) % 0.1)).toFixed(2) : '--'}</span>
-                  <span>V: {isInferencing ? '...' : inferenceData ? (-0.05 - (parseFloat(selectedLocation.lng) % 0.05)).toFixed(2) : '--'}</span>
+                  <span>U: {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.u_curr.toFixed(2) : '--'}</span>
+                  <span>V: {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.v_curr.toFixed(2) : '--'}</span>
                 </div>
               </div>
               <div className="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 col-span-2">
                 <div className="text-slate-400">U / V WINDS</div>
                 <div className="text-sm font-bold text-sky-300 mt-1 flex gap-4">
-                  <span>U: {isInferencing ? '...' : inferenceData ? (3.4 + (parseFloat(selectedLocation.lat) % 2)).toFixed(1) : '--'} m/s</span>
-                  <span>V: {isInferencing ? '...' : inferenceData ? (1.2 + (parseFloat(selectedLocation.lng) % 1)).toFixed(1) : '--'} m/s</span>
+                  <span>U: {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.u_wind.toFixed(1) : '--'} m/s</span>
+                  <span>V: {isInferencing ? '...' : inferenceData?.inputs ? inferenceData.inputs.v_wind.toFixed(1) : '--'} m/s</span>
                 </div>
               </div>
             </div>

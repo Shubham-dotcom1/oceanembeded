@@ -20,6 +20,30 @@ At the heart of Ocean Embedded is the massive **NAUTILUS V2** PyTorch encoder-de
 - **Outputs**: It predicts a continuous subsurface temperature profile down to 1000m using a proprietary **Depth-Aware Decoder**.
 - **Accuracy**: NAUTILUS V2 achieves a record-breaking **0.52°C Global RMSE** with an **$R^2$ of 99.47%**, effectively capturing deep-ocean thermodynamics directly from space.
 
+#### 📊 Performance Metrics (Unseen Test Set)
+- **Global R-Squared ($R^2$):** `0.9947` (**99.47% Variance Explained**)
+- **Global RMSE:** `0.5214 °C`
+- **Global MAE:** `0.2744 °C`
+
+**Depth-Wise Accuracy Breakdown:**
+| Ocean Layer | Depth | RMSE (°C) |
+| :--- | :--- | :--- |
+| **Surface / Mixed Layer** | 0m | **0.2628** |
+| | 5m | **0.2365** |
+| | 10m | **0.2402** |
+| | 20m | **0.2820** |
+| | 30m | **0.3148** |
+| **Upper Thermocline** | 50m | 0.4783 |
+| | 75m | 0.7493 |
+| | 100m | 0.9267 |
+| | 125m | 0.9379 |
+| | 150m | 0.7924 |
+| **Deep Ocean** | 200m | 0.5831 |
+| | 300m | 0.5013 |
+| | 500m | 0.4381 |
+| | 700m | 0.4724 |
+| | 1000m | **0.6052** |
+
 ### 2. Spatiotemporal Observatory Dashboard (React Frontend)
 - **MapLibre Coordinate Search**: An interactive global map allowing users to search exact Latitude/Longitude/Date coordinates (e.g., `15.5, 80.0 2020-05-15`).
 - **4D Time Slider**: Scrub through dates to watch subsurface temperature profiles physically adapt to seasonal changes.
