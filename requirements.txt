@@ -1,0 +1,14 @@
+# Hugging Face Space specific requirement
+gradio>=4.0.0
+
+# Backend specific requirements
+torch>=2.0.0
+torchvision>=0.15.0
+xarray>=2023.1.0
+netCDF4>=1.6.0
+pandas>=2.0.0
+copernicusmarine>=2.2.1
+scikit-learn>=1.2.0
+fastapi>=0.100.0
+uvicorn>=0.22.0
+python-dotenv>=1.0.0

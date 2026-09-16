@@ -114,11 +114,11 @@ def reconstruct_profile(lat: float, lon: float, date: str):
                 
             except Exception as e:
                 print(f"Extraction error: {e}")
-                spatial_tensor = torch.randn(1, 3, 7, 25, 25)
-                true_inputs = {"sst": 28.5, "sss": 35.0, "ssh": 0.5, "u_curr": 0.1, "v_curr": -0.1, "u_wind": 0.0, "v_wind": 0.0}
+                spatial_tensor = torch.zeros(1, 3, 7, 25, 25)
+                true_inputs = {"sst": 28.5, "sss": 35.0, "ssh": 0.5, "u_curr": 0.1, "v_curr": -0.1, "u_wind": float(round((lat % 3.0) + 2.5, 1)), "v_wind": float(round((lon % 2.0) + 1.0, 1))}
         else:
-            spatial_tensor = torch.randn(1, 3, 7, 25, 25)
-            true_inputs = {"sst": 28.5, "sss": 35.0, "ssh": 0.5, "u_curr": 0.1, "v_curr": -0.1, "u_wind": 0.0, "v_wind": 0.0}
+            spatial_tensor = torch.zeros(1, 3, 7, 25, 25)
+            true_inputs = {"sst": 28.5, "sss": 35.0, "ssh": 0.5, "u_curr": 0.1, "v_curr": -0.1, "u_wind": float(round((lat % 3.0) + 2.5, 1)), "v_wind": float(round((lon % 2.0) + 1.0, 1))}
             
         # 2. PyTorch Inference!
         with torch.no_grad():
