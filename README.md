@@ -17,6 +17,7 @@ It features a cutting-edge 4D Spatiotemporal architecture, allowing researchers 
 
 ### 1. NAUTILUS V2: Physics-Informed Neural Network (PyTorch)
 At the heart of Ocean Embedded is the massive **NAUTILUS V2** PyTorch encoder-decoder PINN. 
+- **Model Size**: Highly optimized and efficient architecture containing **~446,000 trainable parameters**, making it ultra-fast for real-time edge and cloud inference while maintaining deep contextual awareness.
 - **Inputs**: It ingests 7 distinct satellite surface tensors (SST, SSS, SLA, U-Wind, V-Wind, U-Current, V-Current).
 - **Temporal Context**: It utilizes a Chronological T=3 GRU network to understand ocean fluid dynamics without data leakage.
 - **Outputs**: It predicts a continuous subsurface temperature profile down to 1000m using a proprietary **Depth-Aware Decoder**.
