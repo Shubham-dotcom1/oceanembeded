@@ -36,13 +36,13 @@ export default function PlanetBannerSection({ onOpenDashboard }) {
             Gain clarity for human-in-the-loop analysis with unmatched scale, depth, and frequency.
           </p>
 
-          {/* Action Pill Button */}
+          {/* Action Button */}
           <button 
             onClick={onOpenDashboard}
-            className="px-7 py-3.5 rounded-xl border border-cyan-400 hover:border-cyan-300 text-white font-mono font-bold text-sm tracking-wider flex items-center gap-2 bg-slate-950/70 hover:bg-cyan-500/20 backdrop-blur-md transition-all shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:scale-105"
+            className="btn-nautilus-primary px-7 py-3.5 text-sm font-semibold tracking-wide flex items-center gap-2 cursor-pointer"
           >
             <span>Learn More</span>
-            <ArrowUpRight className="w-4 h-4 text-cyan-300" />
+            <ArrowUpRight className="w-4 h-4" />
           </button>
 
         </div>

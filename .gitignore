@@ -1,64 +1,202 @@
 # ==========================================
-# Frontend (React/Vite)
+# NAUTILUS — Ocean Intelligence Git Ignore
 # ==========================================
+
+# ------------------------------------------
+# Frontend (React / Vite / Node)
+# ------------------------------------------
+node_modules/
+*/node_modules/
 frontend/node_modules/
+dist/
+dist-ssr/
 frontend/dist/
+build/
+.pnpm-store/
+.vite/
+frontend/.vite/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+*.tsbuildinfo
+.eslintcache
+.turbo/
+
+# Package manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Frontend environment files
 frontend/.env
 frontend/.env.local
 frontend/.env.*.local
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
 
-# ==========================================
-# Backend (Python/FastAPI/PyTorch)
-# ==========================================
+# Temporary mockups & test assets generated during design iterations
+frontend/public/nautilus-hero-*.png
+frontend/public/nautilus-hero-*.jpg
+frontend/public/nautilus-card-*.jpg
+frontend/public/*-mockup.*
+
+# ------------------------------------------
+# Backend (Python / FastAPI / PyTorch)
+# ------------------------------------------
 __pycache__/
+*/__pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-backend/.venv/
+
+# Distribution / packaging
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual Environments
 .venv/
+*/.venv/
+backend/.venv/
 env/
+*/env/
 venv/
+*/venv/
 ENV/
 env.bak/
 venv.bak/
+.conda/
 
-# Environment Variables
-.env
-.env.secret
-backend/.env
+# Testing, Quality & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
 
 # Jupyter Notebooks
 .ipynb_checkpoints
+*-checkpoint.ipynb
 
-# PyTorch Checkpoints & Large Models
+# ------------------------------------------
+# Machine Learning, Models & Checkpoints
+# ------------------------------------------
 *.pth
 *.pt
 *.ckpt
+*.onnx
+*.safetensors
+*.bin
+*.weights
+*.keras
+*.pkl
+*.pickle
+
+# Keep specific production models and directory gitkeeps
 backend/model/checkpoints/*
 !backend/model/checkpoints/.gitkeep
 !backend/model/checkpoints/pilot_model.pth
 !backend/model/checkpoints/nautilus_v2_best.pth
 
-# IDE and Editor Files
-.vscode/
-.idea/
+# Experiment Tracking & Tensorboard
+wandb/
+runs/
+lightning_logs/
+mlruns/
+.tensorboard/
 
-# Large Datasets & NetCDF Files
+# ------------------------------------------
+# Oceanographic, Geospatial & Large Datasets
+# ------------------------------------------
+# NetCDF Files
 *.nc
 *.nc.*
+*.nc4
+
+# Zarr Datasets
+*.zarr
+*.zarr/
+**/*.zarr
+**/*.zarr/
+backend/data/**/*.zarr
+backend/data/processed_nio.zarr/
+backend/data/processed_nio.zarr/*
+backend/data/v3_nio.zarr/
+backend/data/v3_nio.zarr/*
+
+# Tabular & Geospatial Big Data
 *.csv
+*.tsv
+*.parquet
+*.feather
 *.h5
 *.hdf5
+*.grib
+*.grib2
+*.grb
+*.tiff
+*.geotiff
+
+# Raw, Temporary and Processed Data Folders
+backend/data/raw_*/
+backend/data/*_temp/
+backend/data/temp*/
+backend/data/downloads/
 backend/data/raw_nio/*
 !backend/data/raw_nio/.gitkeep
 backend/data/processed_nio/*
 !backend/data/processed_nio/.gitkeep
 
-# OS generated files
+# ------------------------------------------
+# Logs, Diagnostics & Scratch Scripts
+# ------------------------------------------
+*.log
+backend/logs/*
+!backend/logs/.gitkeep
+backend/scratch/*
+!backend/scratch/.gitkeep
+backend/scripts/r2_out.txt
+backend/reports/r2_score.txt
+test_hf.js
+test_gradio.py
+scratch/
+*.tmp
+*.temp
+
+# ------------------------------------------
+# Environment Variables & Secrets
+# ------------------------------------------
+.env
+.env.*
+.env.secret
+backend/.env
+*.env
+!.env.example
+!.env.template
+
+# ------------------------------------------
+# Operating System & IDE Files
+# ------------------------------------------
 .DS_Store
 .DS_Store?
 ._*
@@ -66,30 +204,18 @@ backend/data/processed_nio/*
 .Trashes
 ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# ==========================================
-# NAUTILUS V2 - Large Data Exclusions
-# ==========================================
-# Exclude Zarr Datasets completely
-*.zarr
-*.zarr/
-backend/data/**/*.zarr
-backend/data/processed_nio.zarr/
-backend/data/processed_nio.zarr/*
-backend/data/v3_nio.zarr/
-backend/data/v3_nio.zarr/*
-
-# Logs
-backend/logs/*
-!backend/logs/.gitkeep
-*.log
-
-# Scratch scripts
-backend/scratch/*
-!backend/scratch/.gitkeep
-backend/scripts/r2_out.txt
-backend/reports/r2_score.txt
-
-# Test Scripts
-test_hf.js
-test_gradio.py
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+*.bak

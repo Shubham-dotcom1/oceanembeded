@@ -4,91 +4,165 @@
 
 @layer base {
   :root {
-    --bg-abyss: #020712;
-    --accent-cyan: #00f2ff;
-    --accent-teal: #00d2ff;
-    --accent-blue: #3b82f6;
+    --navy-950: #031A2E;
+    --navy-900: #052847;
+    --ocean-800: #064B78;
+    --ocean-600: #087DB5;
+    --cyan-400: #6EDCFF;
+    --accent-cyan: #6EDCFF;
   }
 
   body {
-    background-color: var(--bg-abyss);
-    font-family: 'Inter', sans-serif;
-    color: #f1f5f9;
+    background-color: var(--navy-950);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #F4FBFF;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
   }
 }
 
-/* Custom Glassmorphism Panels */
-.glass-panel {
-  background: rgba(4, 13, 33, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 242, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+/* Atmospheric Animations */
+@keyframes earthSlowFloat {
+  0%, 100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.015) translate3d(-4px, -3px, 0);
+  }
 }
 
-.glass-panel-interactive {
-  background: rgba(4, 13, 33, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 242, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@keyframes atmosphericGlowPulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
-.glass-panel-interactive:hover {
-  border-color: rgba(0, 242, 255, 0.5);
-  box-shadow: 0 0 25px rgba(0, 242, 255, 0.2), inset 0 0 12px rgba(0, 242, 255, 0.1);
+@keyframes satelliteDrift {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-5px, -3px) rotate(-0.5deg);
+  }
+}
+
+@keyframes scrollLineExtend {
+  0% {
+    height: 0px;
+    opacity: 0;
+  }
+  40% {
+    height: 26px;
+    opacity: 0.85;
+  }
+  80% {
+    height: 38px;
+    opacity: 0;
+  }
+  100% {
+    height: 0px;
+    opacity: 0;
+  }
+}
+
+.animate-earth-float {
+  animation: earthSlowFloat 14s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-glow-pulse {
+  animation: atmosphericGlowPulse 10s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.animate-satellite-drift {
+  animation: satelliteDrift 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-scroll-line {
+  animation: scrollLineExtend 2.2s ease-in-out infinite;
+}
+
+/* Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  .animate-earth-float,
+  .animate-glow-pulse,
+  .animate-satellite-drift,
+  .animate-scroll-line {
+    animation: none !important;
+  }
+}
+
+/* Clean Solid Button Styles - ZERO GLASSMORPHISM */
+.btn-nautilus-primary {
+  background: #F4FBFF;
+  color: #073458;
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: 0 8px 30px rgba(76, 204, 255, 0.22);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-nautilus-primary:hover {
   transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(76, 204, 255, 0.32);
+  background: #FFFFFF;
 }
 
-.glass-button {
-  background: rgba(0, 242, 255, 0.1);
-  border: 1px solid rgba(0, 242, 255, 0.3);
-  backdrop-filter: blur(8px);
-  color: #00f2ff;
-  transition: all 0.2s ease;
+.btn-nautilus-nav {
+  background: #EAF8FF;
+  color: #073458;
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 8px 30px rgba(76, 204, 255, 0.18);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-button:hover {
-  background: rgba(0, 242, 255, 0.25);
-  border-color: rgba(0, 242, 255, 0.7);
-  box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-  color: #ffffff;
+.btn-nautilus-nav:hover {
+  transform: translateY(-1px);
+  background: #FFFFFF;
+  box-shadow: 0 10px 32px rgba(76, 204, 255, 0.26);
 }
 
-/* Glow Utilities */
-.text-cyan-glow {
-  text-shadow: 0 0 12px rgba(0, 242, 255, 0.6);
-}
-
-.box-cyan-glow {
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-}
-
-/* Custom Scrollbar */
+/* Custom Scrollbar - Clean & Minimal */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020712;
+  background: #031A2E;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 242, 255, 0.3);
-  border-radius: 3px;
+  background: rgba(110, 220, 255, 0.25);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 242, 255, 0.6);
+  background: rgba(110, 220, 255, 0.45);
 }
 
-/* Scanline Overlay for Scientific Aesthetic */
-.scanline-overlay {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%,
-    rgba(0, 242, 255, 0.025) 50%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
+/* Custom Scrollbar - Clean & Minimal */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #031A2E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(110, 220, 255, 0.25);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(110, 220, 255, 0.45);
 }

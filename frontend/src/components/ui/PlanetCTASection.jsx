@@ -16,13 +16,13 @@ export default function PlanetCTASection({ onOpenDashboard }) {
           Transform raw satellite and float data into actionable 3D oceanographic intelligence for climate, research, and marine navigation.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 font-mono">
+        <div className="flex flex-wrap items-center justify-center gap-4">
           <button 
             onClick={onOpenDashboard}
-            className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 font-bold text-sm tracking-wider flex items-center gap-2.5 shadow-[0_0_30px_rgba(34,211,238,0.5)] transition-all hover:scale-105"
+            className="btn-nautilus-primary px-8 py-4 text-sm font-semibold tracking-wide flex items-center gap-2.5 cursor-pointer"
           >
-            <span>ENTER OBSERVATORY PLATFORM</span>
-            <ArrowUpRight className="w-5 h-5" />
+            <span>Launch Map Observatory</span>
+            <ArrowUpRight className="w-4 h-4" />
           </button>
         </div>
 

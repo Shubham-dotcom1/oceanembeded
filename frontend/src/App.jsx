@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './components/ui/Navbar';
-import PlanetHeroOverlay from './components/ui/PlanetHeroOverlay';
+import NautilusHeroSection from './components/ui/hero/NautilusHeroSection';
 import PlanetDataGridSection from './components/ui/PlanetDataGridSection';
 import PlanetBannerSection from './components/ui/PlanetBannerSection';
 import PlanetTestimonialsSection from './components/ui/PlanetTestimonialsSection';
@@ -11,35 +11,28 @@ export default function App() {
   const [activeMode, setActiveMode] = useState('landing'); // 'landing' | 'dashboard'
 
   return (
-    <div className="min-h-screen w-full bg-[#080c14] text-slate-100 font-sans select-none relative overflow-x-hidden">
-      {/* Scanline texture overlay for scientific aesthetic */}
-      <div className="scanline-overlay fixed inset-0 z-10 pointer-events-none opacity-30" />
-
-      {/* Top Floating Header (Planet.com style) */}
-      <Navbar 
-        activeMode={activeMode}
-        setActiveMode={setActiveMode}
-      />
-
+    <div className="min-h-screen w-full bg-[#031A2E] text-[#F4FBFF] font-sans select-none relative overflow-x-hidden m-0 p-0">
       {/* Main Content Area */}
       {activeMode === 'landing' ? (
         <main className="relative z-20">
-          {/* Hero Section */}
-          <PlanetHeroOverlay 
+          {/* NAUTILUS Hero Section (NASA × Climate Tech × Editorial) */}
+          <NautilusHeroSection 
             onOpenDashboard={() => setActiveMode('dashboard')}
           />
 
           {/* 3 High-Resolution Interactive Cards (Look broader, Look closer, Look deeper) */}
-          <PlanetDataGridSection 
-            onOpenDashboard={() => setActiveMode('dashboard')}
-          />
+          <div id="data-grid">
+            <PlanetDataGridSection 
+              onOpenDashboard={() => setActiveMode('dashboard')}
+            />
+          </div>
 
           {/* Full-Width Feature Banner ('Unlock a Clearer Ocean') */}
           <PlanetBannerSection 
             onOpenDashboard={() => setActiveMode('dashboard')}
           />
 
-          {/* Partner & Customer Testimonials Section */}
+          {/* Partner & Scientific Testimonials Section */}
           <PlanetTestimonialsSection />
 
           {/* Bottom Conversion Section */}
@@ -49,10 +42,17 @@ export default function App() {
         </main>
       ) : (
         /* Scientific Map Observatory Dashboard View */
-        <div className="pt-20">
-          <DashboardLayout />
+        <div>
+          <Navbar 
+            activeMode={activeMode}
+            setActiveMode={setActiveMode}
+          />
+          <div className="pt-16">
+            <DashboardLayout />
+          </div>
         </div>
       )}
     </div>
   );
 }
+
